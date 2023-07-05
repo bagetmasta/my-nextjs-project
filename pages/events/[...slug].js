@@ -1,28 +1,54 @@
-import { Fragment } from "react";
-import { getFilteredEvents } from "../../dummy-data";
+import { Fragment, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import EventList from "../../components/events/event-list";
 import ResultsTitle from "../../components/events/results-title";
 import Button from "../../components/ui/button";
 import ErrorAlert from "../../components/ui/error-alert";
+import useSWR from "swr";
 
 function FilteredEventsPage() {
+  const [events, setEvents] = useState();
   const router = useRouter();
+
   const filterData = router.query.slug;
 
-  if (!filterData) {
+  const { data, error } = useSWR(
+    "https://my-nextjs-project-6afac-default-rtdb.europe-west1.firebasedatabase.app/events.json",
+    (url) => fetch(url).then((res) => res.json())
+  );
+
+  useEffect(() => {
+    if (data) {
+      const events = [];
+
+      for (const key in data) {
+        events.push({
+          id: key,
+          ...data[key],
+        });
+      }
+
+      setEvents(events);
+    }
+  }, [data]);
+
+  if (!events) {
     return <p className="center">Loading...</p>;
   }
 
   const [filteredYear, filteredMonth] = filterData;
 
+  const numYear = +filteredYear;
+  const numMonth = +filteredMonth;
+
   if (
-    isNaN(+filteredYear) ||
-    isNaN(+filteredMonth) ||
-    +filteredYear > 2030 ||
-    +filteredYear < 2021 ||
-    +filteredMonth > 12 ||
-    +filteredMonth < 1
+    isNaN(numYear) ||
+    isNaN(numMonth) ||
+    numYear > 2030 ||
+    numYear < 2021 ||
+    numMonth > 12 ||
+    numMonth < 1 ||
+    error
   ) {
     return (
       <Fragment>
@@ -36,9 +62,12 @@ function FilteredEventsPage() {
     );
   }
 
-  const filteredEvents = getFilteredEvents({
-    year: +filteredYear,
-    month: +filteredMonth,
+  const filteredEvents = events.filter((event) => {
+    const eventDate = new Date(event.date);
+    return (
+      eventDate.getFullYear() === numYear &&
+      eventDate.getMonth() === numMonth - 1
+    );
   });
 
   if (!filteredEvents || filteredEvents.length === 0) {
@@ -54,7 +83,7 @@ function FilteredEventsPage() {
     );
   }
 
-  const date = new Date(+filteredYear, +filteredMonth - 1);
+  const date = new Date(numYear, numMonth - 1);
 
   return (
     <Fragment>
