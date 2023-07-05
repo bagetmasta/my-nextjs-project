@@ -1,3 +1,4 @@
+import Head from "next/head";
 import EventsSearch from "../../components/events/events-search";
 import EventList from "../../components/events/event-list";
 import { getAllEvents } from "../../helpers/api-util";
@@ -16,6 +17,13 @@ function AllEventsPage(props) {
 
   return (
     <Fragment>
+      <Head>
+        <title>All Events</title>
+        <meta
+          name="description"
+          content="Find a lot of great events that allow you to evolve..."
+        />
+      </Head>
       <EventsSearch onSearch={findEventsHandler}></EventsSearch>
       <EventList items={events} />
     </Fragment>
