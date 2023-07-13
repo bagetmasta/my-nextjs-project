@@ -1,3 +1,17 @@
+# Project Description: NextJS Events
+
+NextJS Events is an application featuring current events. The app has 4 routes:
+
+1. A homepage with featured events.
+2. A page with all the events.
+3. A page with a detailed description of each event.
+4. A page with a list of events relevant to the user's entered month and year.
+   Any user can leave their email to subscribe to updates with new events.
+
+In addition, users have the opportunity to leave comments under each event, and thanks to MongoDB, these comments will be saved and displayed.
+
+---
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
