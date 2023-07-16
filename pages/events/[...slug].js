@@ -68,7 +68,7 @@ function FilteredEventsPage() {
     isNaN(numYear) ||
     isNaN(numMonth) ||
     numYear > 2030 ||
-    numYear < 2021 ||
+    numYear < 2023 ||
     numMonth > 12 ||
     numMonth < 1 ||
     error
